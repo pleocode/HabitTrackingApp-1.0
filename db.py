@@ -22,18 +22,26 @@ def create_tables(db):
 
 def add_counter(db, name, description):
     cur = db.cursor()
-    cur.execute("INSERT INTO counter VALUES (?, ?)", (name, description))
+    cur.execute('INSERT INTO counter VALUES (?, ?)', (name, description))
     db.commit()
 
 def increment_counter(db, name, event_date=None):
     cur = db.cursor()
     if not event_date:
         event_date = str(date.today())
-    cur.execute("INSERT INTO tracker VALUES (?, ?)", (event_date, name))
+    cur.execute('INSERT INTO tracker VALUES (?, ?)', (event_date, name))
     db.commit()
 
 def get_counter_data(db, name):
     cur = db.cursor()
-    cur.execute("SELECT * FROM tracker WHERE counterName=?", (name,))
+    cur.execute('SELECT * FROM tracker WHERE counterName=?', (name,))
     return cur.fetchall()
 
+def get_countername_list(db):
+    cur = db.cursor()
+    cur.execute('select name from counter')
+    all_counters = cur.fetchall()
+    counters_set = set()
+    for counters in all_counters:
+        counters_set.add(counters[0])
+    return list(counters_set)

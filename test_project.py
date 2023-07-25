@@ -1,19 +1,19 @@
 from counter import Counter
 from db import get_db, add_counter, increment_counter, get_counter_data
 from analyse import calculate_count
+import os
 
 class TestCounter:
 
     def setup_method(self):
         self.db = get_db("test.db")
 
-        add_counter(self.db, "test_counter", "test_description")
-        increment_counter(self.db, "test_counter", "2023-07-18")
-        increment_counter(self.db, "test_counter", "2023-07-19")
+        add_counter(self.db, "teste_counter", "test_description")
+        increment_counter(self.db, "test_counter", "2023-07-12")
+        increment_counter(self.db, "test_counter", "2023-07-13")
 
-        increment_counter(self.db, "test_counter", "2023-07-21")
-        increment_counter(self.db, "test_counter", "2023-07-22")
-
+        increment_counter(self.db, "test_counter", "2023-07-14")
+        increment_counter(self.db, "test_counter", "2023-07-15")
 
     def test_counter(self):
         counter = Counter("test_counter_1", "test_description_1")
@@ -32,5 +32,5 @@ class TestCounter:
         assert count == 4
 
     def teardown_method(self):
-        import os
+        self.db.close()
         os.remove("test.db")
