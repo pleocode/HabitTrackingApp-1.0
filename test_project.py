@@ -8,7 +8,7 @@ class TestCounter:
     def setup_method(self):
         self.db = get_db("test.db")
 
-        add_counter(self.db, "teste_counter", "test_description")
+        add_counter(self.db, "test_counter", "test_description", "test_periodicity")
         increment_counter(self.db, "test_counter", "2023-07-12")
         increment_counter(self.db, "test_counter", "2023-07-13")
 
@@ -16,7 +16,7 @@ class TestCounter:
         increment_counter(self.db, "test_counter", "2023-07-15")
 
     def test_counter(self):
-        counter = Counter("test_counter_1", "test_description_1")
+        counter = Counter("test_counter_1", "test_description_1", "test_periodicity_1")
         counter.store(self.db)
 
         counter.increment()
