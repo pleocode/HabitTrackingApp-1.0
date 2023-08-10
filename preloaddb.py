@@ -1,7 +1,6 @@
 from db import get_db, add_counter, increment_counter
 
-
-def preload_db():
+def preload_db(): # loads the data into the database
     db = get_db()
     # load study habit into main.db
     add_counter(db, "study", "study python", "Daily")

@@ -2,10 +2,9 @@ from db import get_counter_data, single_habit_cut_list, get_periodicity, get_cou
 import pandas as pd
 from datetime import timedelta
 
-def calculate_count(db, counter):
+def calculate_count(db, counter): # calculates and returns the count (number of increment events) for a specific habit (counter) stored in "counter" table.
     """
     Calculate the count of the counter.
-
     :param db: an initialized sqlite3 database connection
     :param counter: name of the counter present in the db
     :return: length of the counter increment events
@@ -14,6 +13,12 @@ def calculate_count(db, counter):
     return len(data)
 
 def calculate_streak(db, name):
+    """
+    Calculate the streak of the counter
+    :param db: an initialized sqlite3 database connection
+    :param name: name of the counter present in the db
+    :return: a list with 3 values [streak calculation, streak start date, streak end date]
+    """
     periodicity = get_periodicity(db, name)
     date_list = single_habit_cut_list(db, name) # Convert the list of dates to datetime.date objects
     df = pd.DataFrame({'date': date_list}) # Create a DataFrame with the date objects
@@ -23,7 +28,7 @@ def calculate_streak(db, name):
         streaks = (df["diff"] != timedelta(days=1)).cumsum()  # Identify streaks by grouping consecutive dates with the same difference (timedelta)
         streak_counts = df.groupby(streaks)["date"].agg(["count", "min", "max"])  # Group the DataFrame by streaks and count the number of consecutive dates in each streak
 
-    else:
+    else: # For periodicity other than Daily
         df["date"] = pd.to_datetime(df["date"])  # Convert 'date' column to pandas datetime
         df["week_number"] = df["date"].dt.isocalendar().week  # Extract week number and add it to a new column 'week_number'
         df["streaks"] = (df["week_number"].diff() > 1).cumsum() # Identify streaks by grouping consecutive weeks number
@@ -36,6 +41,11 @@ def calculate_streak(db, name):
     return streak_list
 
 def calculate_longest_streak(db):
+    """
+    Loops the calculate_streak function for each counter in the "counter" table
+    :param db: an initialized sqlite3 database connection
+    :return: returns a list with 4 values [streak calculation, streak start date, streak end date, name of the counter]
+    """
     longest_streak = [0]
     for name in get_countername_list(db): # Loops each habit
         try:
@@ -48,6 +58,16 @@ def calculate_longest_streak(db):
             pass
 
     return longest_streak
+
+
+
+
+
+
+
+
+
+
 
 
 
